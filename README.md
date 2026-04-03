@@ -5,15 +5,15 @@ A monkeytype-inspired typing test for the terminal, written in Rust.
 ## Install
 
 ```bash
+cargo install monkeyterm
+```
+
+Or build from source:
+
+```bash
 git clone https://github.com/nathom/monkeyterm
 cd monkeyterm
 cargo install --path .
-```
-
-Or just build and run directly:
-
-```bash
-cargo run --release
 ```
 
 ## Usage
@@ -33,9 +33,9 @@ Press `/` on the language or theme rows to search.
 
 ### Languages
 
-19 languages: English (200/1k/5k/10k), Spanish, French, German, Portuguese, Italian, Dutch, Swedish, plus code (Rust, Python, JavaScript, TypeScript, Go, C, C++, Java).
+345 languages from monkeytype. Common ones are bundled, others are fetched on first use.
 
-Code mode uses real snippets from [Rosetta Code](https://rosettacode.org). Indentation is auto-inserted.
+8 code languages with real snippets from [Rosetta Code](https://rosettacode.org): Rust, Python, JavaScript, TypeScript, Go, C, C++, Java. Indentation is auto-inserted.
 
 ### Themes
 
