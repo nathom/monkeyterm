@@ -54,16 +54,12 @@ fn fetch_remote_language(name: &str) -> Option<String> {
 
     // Download from monkeytype GitHub
     let url = format!("{}/{}.json", MONKEYTYPE_RAW_URL, name);
-    let output = std::process::Command::new("curl")
-        .args(["-sf", "--max-time", "10", &url])
-        .output()
+    let json_str = ureq::get(&url)
+        .timeout(std::time::Duration::from_secs(10))
+        .call()
+        .ok()?
+        .into_string()
         .ok()?;
-
-    if !output.status.success() {
-        return None;
-    }
-
-    let json_str = String::from_utf8(output.stdout).ok()?;
     // Parse JSON to extract words array
     let parsed: serde_json::Value = serde_json::from_str(&json_str).ok()?;
     let words = parsed.get("words")?.as_array()?;
