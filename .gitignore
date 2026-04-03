@@ -1,5 +1,17 @@
-# Rust
-/target
+# Ignore everything
+*
 
-# macOS
-.DS_Store
+# Allow project structure
+!.gitignore
+!Cargo.toml
+!Cargo.lock
+!README.md
+!build.rs
+
+# Allow source
+!src/
+!src/**
+
+# Allow data
+!data/
+!data/**
