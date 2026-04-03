@@ -1,0 +1,1384 @@
+public static void insertSort(int[] A){
+  for(int i = 1; i < A.length; i++){
+    int value = A[i];
+    int j = i - 1;
+    while(j >= 0 && A[j] > value){
+      A[j + 1] = A[j];
+      j = j - 1;
+    }
+    A[j + 1] = value;
+  }
+}
+---
+import java.util.ArrayList;
+
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+
+public class FindMissingPermutation {
+	public static void main(String[] args) {
+		Joiner joiner = Joiner.on("").skipNulls();
+		ImmutableSet<String> s = ImmutableSet.of("ABCD", "CABD", "ACDB",
+				"DACB", "BCDA", "ACBD", "ADCB", "CDAB", "DABC", "BCAD", "CADB",
+				"CDBA", "CBAD", "ABDC", "ADBC", "BDCA", "DCBA", "BACD", "BADC",
+				"BDAC", "CBDA", "DBCA", "DCAB");
+
+		for (ArrayList<Character> cs : Utils.Permutations(Lists.newArrayList(
+				'A', 'B', 'C', 'D')))
+			if (!s.contains(joiner.join(cs)))
+				System.out.println(joiner.join(cs));
+	}
+}
+---
+import java.util.concurrent.ThreadLocalRandom;
+
+public final class SleepingBeauty {
+
+	public static void main(String[] aArgs) {
+		final int experiments = 1_000_000;
+	    ThreadLocalRandom random = ThreadLocalRandom.current();
+	
+	    enum Coin { HEADS, TAILS }
+	
+	    int heads = 0;
+	    int awakenings = 0;	
+	
+	    for ( int i = 0; i < experiments; i++ ) {
+	        Coin coin = Coin.values()[random.nextInt(0, 2)];
+	        switch ( coin ) {
+	        	case HEADS -> { awakenings += 1; heads += 1; }
+	        	case TAILS -> awakenings += 2;
+	        }
+	    }
+	
+	    System.out.println("Awakenings over " + experiments + " experiments: " + awakenings);
+	    String credence = String.format("%.3f", (double) heads / awakenings);
+	    System.out.println("Sleeping Beauty should estimate a credence of: " + credence);
+	}
+	
+}
+---
+import static java.lang.Math.pow;
+import java.util.*;
+import java.util.function.Function;
+
+public class Test {
+    static double calc(Function<Integer, Integer[]> f, int n) {
+        double temp = 0;
+
+        for (int ni = n; ni >= 1; ni--) {
+            Integer[] p = f.apply(ni);
+            temp = p[1] / (double) (p[0] + temp);
+        }
+        return f.apply(0)[0] + temp;
+    }
+
+    public static void main(String[] args) {
+        List<Function<Integer, Integer[]>> fList = new ArrayList<>();
+        fList.add(n -> new Integer[]{n > 0 ? 2 : 1, 1});
+        fList.add(n -> new Integer[]{n > 0 ? n : 2, n > 1 ? (n - 1) : 1});
+        fList.add(n -> new Integer[]{n > 0 ? 6 : 3, (int) pow(2 * n - 1, 2)});
+
+        for (Function<Integer, Integer[]> f : fList)
+            System.out.println(calc(f, 200));
+    }
+}
+---
+$ java PancakeSort  1 2 5 4 3 10 9 8 7
+flip(0..5): 10 3 4 5 2 1 9 8 7
+flip(0..8): 7 8 9 1 2 5 4 3 10
+flip(0..2): 9 8 7 1 2 5 4 3 10
+flip(0..7): 3 4 5 2 1 7 8 9 10
+flip(0..2): 5 4 3 2 1 7 8 9 10
+flip(0..4): 1 2 3 4 5 7 8 9 10
+1 2 3 4 5 7 8 9 10
+
+$ java PancakeSort  6 7 2 1 8 9 5 3 4
+flip(0..5): 9 8 1 2 7 6 5 3 4
+flip(0..8): 4 3 5 6 7 2 1 8 9
+flip(0..1): 3 4 5 6 7 2 1 8 9
+flip(0..4): 7 6 5 4 3 2 1 8 9
+flip(0..6): 1 2 3 4 5 6 7 8 9
+1 2 3 4 5 6 7 8 9
+---
+import Jama.Matrix;
+public class SingularValueDecomposition {
+    public static void main(String[] args) {
+        double[][] matrixArray = {{3, 0}, {4, 5}};
+        var matrix = new Matrix(matrixArray);
+        var svd = matrix.svd();
+        svd.getU().print(0, 10);
+        svd.getS().print(0, 10);
+        svd.getV().print(0, 10);
+    }
+}
+---
+import java.util.Random;
+
+public class GaussJordan {
+    public static void main(String[] args) {
+        int rows = 5;
+        Matrix m = new Matrix(rows, rows);
+        Random r = new Random();
+        for (int row = 0; row < rows; ++row) {
+            for (int column = 0; column < rows; ++column)
+                m.set(row, column, r.nextDouble());
+        }
+        System.out.println("Matrix:");
+        m.print();
+        System.out.println("Inverse:");
+        Matrix inv = m.inverse();
+        inv.print();
+        System.out.println("Product of matrix and inverse:");
+        Matrix.product(m, inv).print();
+    }
+}
+---
+public class Accumulator
+{
+    private Number sum;
+
+    public Accumulator(Number sum0) {
+	sum = sum0;
+    }
+
+    public Number apply(Number n) {
+	return (longable(sum) && longable(n)) ?
+	    (sum = sum.longValue() + n.longValue()) :
+	    (sum = sum.doubleValue() + n.doubleValue());
+    }
+
+    private static boolean longable(Number n) {
+	return n instanceof Byte || n instanceof Short ||
+	    n instanceof Integer || n instanceof Long;
+    }
+
+    public static void main(String[] args) {
+	Accumulator x = new Accumulator(1);
+	x.apply(5);
+	new Accumulator(3);
+	System.out.println(x.apply(2.3));
+    }
+}
+---
+import java.awt.event.*;
+import javax.swing.*;
+
+public class Test extends JFrame {
+
+    Test() {
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                int keyCode = e.getKeyCode();
+                System.out.println(keyCode);
+            }
+        });
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            Test f = new Test();
+            f.setFocusable(true);
+            f.setVisible(true);
+        });
+    }
+}
+---
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+public class PPMWriter {
+
+    public void bitmapToPPM(File file, BasicBitmapStorage bitmap) throws IOException {
+        file.delete();
+
+        try (var os = new FileOutputStream(file, true);
+             var bw = new BufferedOutputStream(os)) {
+            var header = String.format("P6\n%d %d\n255\n",
+                    bitmap.getWidth(), bitmap.getHeight());
+
+            bw.write(header.getBytes(StandardCharsets.US_ASCII));
+
+            for (var y = 0; y < bitmap.getHeight(); y++) {
+                for (var x = 0; x < bitmap.getWidth(); x++) {
+                    var pixel = bitmap.getPixel(x, y);
+                    bw.write(pixel.getRed());
+                    bw.write(pixel.getGreen());
+                    bw.write(pixel.getBlue());
+                }
+            }
+        }
+    }
+}
+---
+public static TreeSet<Long> factors(long n)
+{
+ TreeSet<Long> factors = new TreeSet<Long>();
+ factors.add(n);
+ factors.add(1L);
+ for(long test = n - 1; test >= Math.sqrt(n); test--)
+  if(n % test == 0)
+  {
+   factors.add(test);
+   factors.add(n / test);
+  }
+ return factors;
+}
+---
+import static If2.if2;
+class Main {
+    private static void print(String s) {
+        System.out.println(s);
+    }
+
+    public static void main(String[] args) {
+        if2(true, true,
+                () -> print("both true"),
+                () -> print("first true"),
+                () -> print("second true"),
+                () -> print("none true"));
+    }
+}
+---
+class Link
+{
+    Link next;
+    int data;
+}
+---
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+---
+import java.io.*;
+import java.nio.file.*;
+
+public class GloballyReplaceText {
+
+    public static void main(String[] args) throws IOException {
+
+        for (String fn : new String[]{"test1.txt", "test2.txt"}) {
+            String s = new String(Files.readAllBytes(Paths.get(fn)));
+            s = s.replace("Goodbye London!", "Hello New York!");
+            try (FileWriter fw = new FileWriter(fn)) {
+                fw.write(s);
+            }
+        }
+    }
+}
+---
+public static ArrayList<String> getpowerset(int a[],int n,ArrayList<String> ps)
+    {
+        if(n<0)
+        {
+            return null;
+        }
+        if(n==0)
+        {
+            if(ps==null)
+                ps=new ArrayList<String>();
+            ps.add(" ");
+            return ps;
+        }
+        ps=getpowerset(a, n-1, ps);
+        ArrayList<String> tmp=new ArrayList<String>();
+        for(String s:ps)
+        {
+            if(s.equals(" "))
+                tmp.add(""+a[n-1]);
+            else
+                tmp.add(s+a[n-1]);
+        }
+        ps.addAll(tmp);
+        return ps;
+    }
+---
+public class ReverseWords {
+
+    static final String[] lines = {
+        " ----------- Ice and Fire ----------- ",
+        "                                      ",
+        " fire, in end will world the say Some ",
+        " ice. in say Some                     ",
+        " desire of tasted I've what From      ",
+        " fire. favor who those with hold I    ",
+        "                                      ",
+        " ... elided paragraph last ...        ",
+        " Frost Robert ----------------------- "};
+
+    public static void main(String[] args) {
+        for (String line : lines) {
+            String[] words = line.split("\\s");
+            for (int i = words.length - 1; i >= 0; i--)
+                System.out.printf("%s ", words[i]);
+            System.out.println();
+        }
+    }
+}
+---
+import java.math.BigInteger;
+
+public final class UltraUsefulPrimes {
+
+	public static void main(String[] args) {
+		for ( int n = 1; n <= 10; n++ ) {
+			showUltraUsefulPrime(n);
+		}		
+	}
+	
+	private static void showUltraUsefulPrime(int n) {
+		BigInteger prime = BigInteger.ONE.shiftLeft(1 << n);
+		BigInteger k = BigInteger.ONE;
+		while ( ! prime.subtract(k).isProbablePrime(20) ) {
+			k = k.add(BigInteger.TWO);
+		}
+		
+		System.out.print(k + " ");		
+	}
+
+}
+---
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class LinePrinter {
+  public static void main(String[] args) {
+    try {
+      FileWriter lp0 = new FileWriter("/dev/lp0");
+      lp0.write("Hello World!");
+      lp0.close();
+    } catch (IOException ioe) {
+      ioe.printStackTrace();
+    }
+  }
+}
+---
+public class MyClass{
+
+  private int variable;
+
+  public MyClass(){
+  }
+
+  public void someMethod(){
+   this.variable = 1;
+  }
+}
+---
+int max(int[] values) {
+    int max = values[0];
+    for (int value : values)
+        if (max < value) max = value;
+    return max;
+}
+---
+public class JNIDemo
+{
+  static
+  {  System.loadLibrary("JNIDemo");  }
+
+  public static void main(String[] args)
+  {
+    System.out.println(callStrdup("Hello World!"));
+  }
+
+  private static native String callStrdup(String s);
+}
+---
+import java.util.function.Function;
+
+public interface YCombinator {
+  interface RecursiveFunction<F> extends Function<RecursiveFunction<F>, F> { }
+  public static <A,B> Function<A,B> Y(Function<Function<A,B>, Function<A,B>> f) {
+    RecursiveFunction<Function<A,B>> r = w -> f.apply(x -> w.apply(w).apply(x));
+    return r.apply(r);
+  }
+
+  public static void main(String... arguments) {
+    Function<Integer,Integer> fib = Y(f -> n ->
+      (n <= 2)
+        ? 1
+        : (f.apply(n - 1) + f.apply(n - 2))
+    );
+    Function<Integer,Integer> fac = Y(f -> n ->
+      (n <= 1)
+        ? 1
+        : (n * f.apply(n - 1))
+    );
+
+    System.out.println("fib(10) = " + fib.apply(10));
+    System.out.println("fac(10) = " + fac.apply(10));
+  }
+}
+---
+import java.io.IOException;
+import java.net.*;
+public class SocketSend {
+  public static void main(String args[]) throws IOException {
+    sendData("localhost", "hello socket world");
+  }
+
+  public static void sendData(String host, String msg) throws IOException {
+    Socket sock = new Socket( host, 256 );
+    sock.getOutputStream().write(msg.getBytes());
+    sock.getOutputStream().flush();
+    sock.close();
+  }
+}
+---
+public static long gcd(long a, long b){
+   long factor= Math.min(a, b);
+   for(long loop= factor;loop > 1;loop--){
+      if(a % loop == 0 && b % loop == 0){
+         return loop;
+      }
+   }
+   return 1;
+}
+---
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
+
+public class CreateFile {
+    public static void main(String[] args) throws IOException {
+        String os = System.getProperty("os.name");
+        if (os.contains("Windows")) {
+            Path path = Paths.get("tape.file");
+            Files.write(path, Collections.singletonList("Hello World!"));
+        } else {
+            Path path = Paths.get("/dev/tape");
+            Files.write(path, Collections.singletonList("Hello World!"));
+        }
+    }
+}
+---
+LinkedList<Type> list = new LinkedList<Type>();
+
+for(Type i: list){
+  System.out.println(i);
+}
+---
+import java.awt.Robot
+public static void type(String str){
+   Robot robot = new Robot();
+   for(char ch:str.toCharArray()){
+      if(Character.isUpperCase(ch)){
+         robot.keyPress(KeyEvent.VK_SHIFT);
+         robot.keyPress((int)ch);
+         robot.keyRelease((int)ch);
+         robot.keyRelease(KeyEvent.VK_SHIFT);
+      }else{
+         char upCh = Character.toUpperCase(ch);
+         robot.keyPress((int)upCh);
+         robot.keyRelease((int)upCh);
+      }
+   }
+}
+---
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class HelloWorld{
+  public static void main(String[] args) throws IOException{
+    ServerSocket listener = new ServerSocket(8080);
+    while(true){
+      Socket sock = listener.accept();
+      new PrintWriter(sock.getOutputStream(), true).
+                println("Goodbye, World!");
+      sock.close();
+    }
+  }
+}
+---
+import java.util.Scanner;
+
+public class Subleq {
+
+    public static void main(String[] args) {
+        int[] mem = {15, 17, -1, 17, -1, -1, 16, 1, -1, 16, 3, -1, 15, 15, 0, 0,
+            -1, 72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 10, 0};
+
+        Scanner input = new Scanner(System.in);
+        int instructionPointer = 0;
+
+        do {
+            int a = mem[instructionPointer];
+            int b = mem[instructionPointer + 1];
+
+            if (a == -1) {
+                mem[b] = input.nextInt();
+
+            } else if (b == -1) {
+                System.out.printf("%c", (char) mem[a]);
+
+            } else {
+
+                mem[b] -= mem[a];
+                if (mem[b] < 1) {
+                    instructionPointer = mem[instructionPointer + 2];
+                    continue;
+                }
+            }
+
+            instructionPointer += 3;
+
+        } while (instructionPointer >= 0);
+    }
+}
+---
+import java.io.File;
+import java.io.IOException;
+
+public class CreateTempFile {
+    public static void main(String[] args)  {
+        try {
+            File temp = File.createTempFile("temp-file-name", ".tmp");
+            System.out.println("Temp file : " + temp.getAbsolutePath());
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+    	}
+    }
+}
+---
+import java.io.*;
+
+public class FileIODemo {
+  public static void main(String[] args) {
+    try {
+      FileInputStream in = new FileInputStream("input.txt");
+      FileOutputStream out = new FileOutputStream("ouput.txt");
+      int c;
+      while ((c = in.read()) != -1) {
+        out.write(c);
+      }
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e){
+      e.printStackTrace();
+    }
+  }
+}
+---
+public class Antiprime {
+
+    static int countDivisors(int n) {
+        if (n < 2) return 1;
+        int count = 2;
+        for (int i = 2; i <= n/2; ++i) {
+            if (n%i == 0) ++count;
+        }
+        return count;
+    }
+
+    public static void main(String[] args) {
+        int maxDiv = 0, count = 0;
+        System.out.println("The first 20 anti-primes are:");
+        for (int n = 1; count < 20; ++n) {
+            int d = countDivisors(n);
+            if (d > maxDiv) {
+                System.out.printf("%d ", n);
+                maxDiv = d;
+                count++;
+            }
+        }
+        System.out.println();
+    }
+}
+---
+Point getPoint() {
+    return new Point(1, 2);
+}
+
+static class Point {
+    int x, y;
+
+    public Point(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+}
+---
+public class TwelveDaysOfChristmas {
+
+    final static String[] gifts = {
+        "A partridge in a pear tree.", "Two turtle doves and",
+        "Three french hens", "Four calling birds",
+        "Five golden rings", "Six geese a-laying",
+        "Seven swans a-swimming", "Eight maids a-milking",
+        "Nine ladies dancing", "Ten lords a-leaping",
+        "Eleven pipers piping", "Twelve drummers drumming",
+        "And a partridge in a pear tree.", "Two turtle doves"
+    };
+
+    final static String[] days = {
+        "first", "second", "third", "fourth", "fifth", "sixth", "seventh",
+        "eighth", "ninth", "tenth", "eleventh", "Twelfth"
+    };
+
+    public static void main(String[] args) {
+        for (int i = 0; i < days.length; i++) {
+            System.out.printf("%nOn the %s day of Christmas%n", days[i]);
+            System.out.println("My true love gave to me:");
+            for (int j = i; j >= 0; j--)
+                System.out.println(gifts[i == 11 && j < 2 ? j + 12 : j]);
+        }
+    }
+}
+---
+public boolean isNumeric(String input) {
+  try {
+    Integer.parseInt(input);
+    return true;
+  }
+  catch (NumberFormatException e) {
+    return false;
+  }
+}
+---
+& | ^ ~
+>> <<
+>>>
++ - * / = %
+---
+import javax.swing.*;
+
+public class GetInputSwing {
+    public static void main(String[] args) throws Exception {
+        int number = Integer.parseInt(
+                JOptionPane.showInputDialog ("Enter an Integer"));
+        String string = JOptionPane.showInputDialog ("Enter a String");
+    }
+}
+---
+public static boolean extIsIn(String test, String... exts){
+	for(int i = 0; i < exts.length; i++){
+		exts[i] = exts[i].replaceAll("\\.", "");
+	}
+	return (new FileNameExtensionFilter("extension test", exts)).accept(new File(test));
+}
+---
+public static void main(String[] args) {
+    File fileA = new File("file.txt");
+    System.out.printf("%,d B%n", fileA.length());
+    File fileB = new File("/file.txt");
+    System.out.printf("%,d B%n", fileB.length());
+}
+---
+public class JortSort {
+    public static void main(String[] args) {
+        System.out.println(jortSort(new int[]{1, 2, 3}));
+    }
+
+    static boolean jortSort(int[] arr) {
+        return true;
+    }
+}
+---
+import java.util.stream.IntStream;
+
+public class Letters {
+    public static void main(String[] args) throws Exception {
+        System.out.print("Upper case: ");
+        IntStream.rangeClosed(0, 0x10FFFF)
+                 .filter(Character::isUpperCase)
+                 .limit(72)
+                 .forEach(n -> System.out.printf("%c", n));
+        System.out.println("...");
+
+        System.out.print("Lower case: ");
+        IntStream.rangeClosed(0, 0x10FFFF)
+                 .filter(Character::isLowerCase)
+                 .limit(72)
+                 .forEach(n -> System.out.printf("%c", n));
+        System.out.println("...");
+    }
+}
+---
+double e(long limit) {
+    double e = 1;
+    for (long term = 1; term <= limit; term++)
+        e += 1d / factorial(term);
+    return e;
+}
+
+long factorial(long value) {
+    return value == 1 ? value : value * factorial(--value);
+}
+---
+public class Sum{
+    public static double f(double x){
+       return 1/(x*x);
+    }
+
+    public static void main(String[] args){
+       double start = 1;
+       double end = 1000;
+       double sum = 0;
+
+       for(double x = start;x <= end;x++) sum += f(x);
+
+       System.out.println("Sum of f(x) from " + start + " to " + end +" is " + sum);
+    }
+}
+---
+import java.io.InputStream;
+import java.util.Scanner;
+
+public class InputLoop {
+    public static void main(String args[]) {
+        InputStream source = System.in;
+
+
+        Scanner in = new Scanner(source);
+        while(in.hasNext()){
+            String input = in.next();
+
+            System.out.println(input);
+        }
+    }
+}
+---
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class Horner {
+    public static void main(String[] args){
+        List<Double> coeffs = new ArrayList<Double>();
+        coeffs.add(-19.0);
+        coeffs.add(7.0);
+        coeffs.add(-4.0);
+        coeffs.add(6.0);
+        System.out.println(polyEval(coeffs, 3));
+    }
+
+    public static double polyEval(List<Double> coefficients, double x) {
+        Collections.reverse(coefficients);
+        Double accumulator = coefficients.get(0);
+        for (int i = 1; i < coefficients.size(); i++) {
+            accumulator = (accumulator * x) + (Double) coefficients.get(i);
+        }
+        return accumulator;
+    }
+}
+---
+import java.util.LinkedList;
+
+public class Sieve{
+       public static LinkedList<Integer> sieve(int n){
+               if(n < 2) return new LinkedList<Integer>();
+               LinkedList<Integer> primes = new LinkedList<Integer>();
+               LinkedList<Integer> nums = new LinkedList<Integer>();
+
+               for(int i = 2;i <= n;i++){
+                       nums.add(i);
+               }
+
+               while(nums.size() > 0){
+                       int nextPrime = nums.remove();
+                       for(int i = nextPrime * nextPrime;i <= n;i += nextPrime){
+                               nums.removeFirstOccurrence(i);
+                       }
+                       primes.add(nextPrime);
+               }
+               return primes;
+       }
+}
+---
+public static String lcs(String a, String b){
+    int aLen = a.length();
+    int bLen = b.length();
+    if(aLen == 0 || bLen == 0){
+        return "";
+    }else if(a.charAt(aLen-1) == b.charAt(bLen-1)){
+        return lcs(a.substring(0,aLen-1),b.substring(0,bLen-1))
+            + a.charAt(aLen-1);
+    }else{
+        String x = lcs(a, b.substring(0,bLen-1));
+        String y = lcs(a.substring(0,aLen-1), b);
+        return (x.length() > y.length()) ? x : y;
+    }
+}
+---
+public static double nthroot(int n, double A) {
+	return nthroot(n, A, .001);
+}
+public static double nthroot(int n, double A, double p) {
+	if(A < 0) {
+		System.err.println("A < 0");// we handle only real positive numbers
+		return -1;
+	} else if(A == 0) {
+		return 0;
+	}
+	double x_prev = A;
+	double x = A / n;
+	while(Math.abs(x - x_prev) > p) {
+		x_prev = x;
+		x = ((n - 1.0) * x + A / Math.pow(x, n - 1.0)) / n;
+	}
+	return x;
+}
+---
+String split(String string) {
+    Pattern pattern = Pattern.compile("(.)\\1*");
+    Matcher matcher = pattern.matcher(string);
+    StringBuilder strings = new StringBuilder();
+    int index = 0;
+    while (matcher.find()) {
+        if (index++ != 0)
+            strings.append(", ");
+        strings.append(matcher.group());
+    }
+    return strings.toString();
+}
+---
+public class Str{
+   public static void main(String[] args){
+      String s = "hello";
+      System.out.println(s + " literal");
+      String s2 = s + " literal";
+      System.out.println(s2);
+   }
+}
+---
+import java.util.LinkedList;
+import java.util.List;
+
+
+public final class FlattenUtil {
+
+	public static List<Object> flatten(List<?> list) {
+		List<Object> retVal = new LinkedList<Object>();
+		flatten(list, retVal);
+		return retVal;
+	}
+
+	public static void flatten(List<?> fromTreeList, List<Object> toFlatList) {
+		for (Object item : fromTreeList) {
+			if (item instanceof List<?>) {
+				flatten((List<?>) item, toFlatList);
+			} else {
+				toFlatList.add(item);
+			}
+		}
+	}
+}
+---
+public static void main(String[] args) {
+    long millis = System.currentTimeMillis();
+    System.out.printf("%tF%n", millis);
+    System.out.printf("%tA, %1$tB %1$td, %1$tY%n", millis);
+}
+---
+import java.util.Random;
+
+public class Dice {
+	Random rand = new Random();
+	int sides;
+	Dice(int numSides) {
+		sides = numSides;
+	}
+	Dice() {
+		sides = 6;
+	}
+	int roll() {
+		return rand.nextInt(sides) + 1;
+	}
+}
+---
+public void move(int n, int from, int to, int via) {
+  if (n == 1) {
+    System.out.println("Move disk from pole " + from + " to pole " + to);
+  } else {
+    move(n - 1, from, via, to);
+    move(1, from, to, via);
+    move(n - 1, via, to, from);
+  }
+}
+---
+while (condition) {
+  ...
+  if (someCondition) { continue; /* skip to beginning of this loop */ }
+  ...
+}
+
+top: for (int 1 = 0; i < 10; ++i) {
+  ...
+  middle: for (int j = 0; j < 10; ++j) {
+    ...
+    bottom: for (int k = 0; k < 10; ++k) {
+    ...
+    if (top_condition) { continue top; /* restart outer loop */ }
+    ...
+    if (middle_condition) { continue middle; /* restart middle loop */ }
+    ...
+    if (bottom_condition) { continue bottom; /* restart bottom loop */ }
+    ...
+    if (bottom_condition) { continue; /* this will also restart bottom loop */ }
+    ...
+    }
+    ...
+  }
+  ....
+}
+---
+void create() throws IOException {
+    File file = new File("output.txt");
+    file.createNewFile();
+    File directory = new File("docs/");
+    directory.mkdirs();
+    File rootDirectory = new File("/docs/");
+    rootDirectory.mkdirs();
+}
+---
+public static void countingSort(int[] array, int min, int max){
+	int[] count= new int[max - min + 1];
+	for(int number : array){
+		count[number - min]++;
+	}
+	int z= 0;
+	for(int i= min;i <= max;i++){
+		while(count[i - min] > 0){
+			array[z]= i;
+			z++;
+			count[i - min]--;
+		}
+	}
+}
+---
+int[] concat(int[] arrayA, int[] arrayB) {
+    int[] array = new int[arrayA.length + arrayB.length];
+    System.arraycopy(arrayA, 0, array, 0, arrayA.length);
+    System.arraycopy(arrayB, 0, array, arrayA.length, arrayB.length);
+    return array;
+}
+---
+import java.io.File;
+
+public class MainEntry {
+    public static void main(String[] args) {
+        walkin(new File("/home/user"));
+    }
+
+    public static void walkin(File dir) {
+        String pattern = ".mp3";
+
+        File listFile[] = dir.listFiles();
+        if (listFile != null) {
+            for (int i=0; i<listFile.length; i++) {
+                if (listFile[i].isDirectory()) {
+                    walkin(listFile[i]);
+                } else {
+                    if (listFile[i].getName().endsWith(pattern)) {
+                        System.out.println(listFile[i].getPath());
+                    }
+                }
+            }
+        }
+    }
+}
+---
+public static <E extends Comparable<? super E>> void sort(E[] input) {
+    int gap = input.length;
+    boolean swapped = true;
+    while (gap > 1 || swapped) {
+        if (gap > 1) {
+            gap = (int) (gap / 1.3);
+        }
+        swapped = false;
+        for (int i = 0; i + gap < input.length; i++) {
+            if (input[i].compareTo(input[i + gap]) > 0) {
+                E t = input[i];
+                input[i] = input[i + gap];
+                input[i + gap] = t;
+                swapped = true;
+            }
+        }
+    }
+}
+---
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class ReadFile {
+    public static void main(String[] args) throws IOException{
+        String fileContents = readEntireFile("./foo.txt");
+    }
+
+    private static String readEntireFile(String filename) throws IOException {
+        FileReader in = new FileReader(filename);
+        StringBuilder contents = new StringBuilder();
+        char[] buffer = new char[4096];
+        int read = 0;
+        do {
+            contents.append(buffer, 0, read);
+            read = in.read(buffer);
+        } while (read >= 0);
+        in.close();
+        return contents.toString();
+    }
+}
+---
+public static int[] sort(int[] old) {
+    for (int shift = Integer.SIZE - 1; shift > -1; shift--) {
+        int[] tmp = new int[old.length];
+        int j = 0;
+
+        for (int i = 0; i < old.length; i++) {
+            boolean move = old[i] << shift >= 0;
+
+            if (shift == 0 ? !move : move) {
+                tmp[j] = old[i];
+                j++;
+            } else {
+                old[i - j] = old[i];
+            }
+        }
+
+        for (int i = j; i < tmp.length; i++) {
+            tmp[i] = old[i - j];
+        }
+
+        old = tmp;
+    }
+
+    return old;
+}
+---
+public final class MinimumMultipleDigitSum {
+
+	public static void main(String[] aArgs) {
+		for ( int n = 1; n <= 70; n++ ) {
+			int k = 0;
+			while ( digitSum(k += n) != n );
+			System.out.print(String.format("%8d%s", k / n, ( n % 10 ) == 0 ? "\n" : " "));
+		}
+	}
+	
+	private static int digitSum(int aN) {
+		int sum = 0;
+		while ( aN > 0 ) {
+			sum += aN % 10;
+			aN /= 10;
+		}
+		return sum;
+	}
+
+}
+---
+import java.util.Scanner;
+
+public class CopyStdinToStdout {
+
+    public static void main(String[] args) {
+        try (Scanner scanner = new Scanner(System.in);) {
+            String s;
+            while ( (s = scanner.nextLine()).compareTo("") != 0 ) {
+                System.out.println(s);
+            }
+        }
+    }
+
+}
+---
+Comparator<String> comparator = new Comparator<String>() {
+    public int compare(String stringA, String stringB) {
+        if (stringA.compareTo(stringB) > 0) {
+            return -1;
+        } else if (stringA.compareTo(stringB) < 0) {
+            return 1;
+        }
+        return 0;
+    }
+};
+---
+String[][] list1 = {{"a","b","c"}, {"A", "B", "C"}, {"1", "2", "3"}};
+        for (int i = 0; i < list1.length; i++) {
+            for (String[] lista : list1) {
+                System.out.print(lista[i]);
+            }
+            System.out.println();
+        }
+---
+public static String select(List<String> list, String prompt){
+    if(list.size() == 0) return "";
+    Scanner sc = new Scanner(System.in);
+    String ret = null;
+    do{
+        for(int i=0;i<list.size();i++){
+            System.out.println(i + ": "+list.get(i));
+        }
+        System.out.print(prompt);
+        int index = sc.nextInt();
+        if(index >= 0 && index < list.size()){
+            ret = list.get(index);
+        }
+    }while(ret == null);
+    return ret;
+}
+---
+public class Luhn {
+    public static void main(String[] args) {
+        System.out.println(luhnTest("49927398716"));
+        System.out.println(luhnTest("49927398717"));
+        System.out.println(luhnTest("1234567812345678"));
+        System.out.println(luhnTest("1234567812345670"));
+    }
+
+    public static boolean luhnTest(String number){
+        int s1 = 0, s2 = 0;
+        String reverse = new StringBuffer(number).reverse().toString();
+        for(int i = 0 ;i < reverse.length();i++){
+            int digit = Character.digit(reverse.charAt(i), 10);
+            if(i % 2 == 0){//this is for odd digits, they are 1-indexed in the algorithm
+                s1 += digit;
+            }else{//add 2 * digit for 0-4, add 2 * digit - 9 for 5-9
+                s2 += 2 * digit;
+                if(digit >= 5){
+                    s2 -= 9;
+                }
+            }
+        }
+        return (s1 + s2) % 10 == 0;
+    }
+}
+---
+import java.lang.reflect.Method;
+
+class Example {
+  public int foo(int x) {
+    return 42 + x;
+  }
+}
+
+public class Main {
+  public static void main(String[] args) throws Exception {
+    Object example = new Example();
+    String name = "foo";
+    Class<?> clazz = example.getClass();
+    Method meth = clazz.getMethod(name, int.class);
+    Object result = meth.invoke(example, 5);
+    System.out.println(result);
+  }
+}
+---
+import java.util.stream.IntStream;
+
+public class Test {
+
+    static IntStream getPrimes(int start, int end) {
+        return IntStream.rangeClosed(start, end).filter(n -> isPrime(n));
+    }
+
+    public static boolean isPrime(long x) {
+        if (x < 3 || x % 2 == 0)
+            return x == 2;
+
+        long max = (long) Math.sqrt(x);
+        for (long n = 3; n <= max; n += 2) {
+            if (x % n == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        getPrimes(0, 100).forEach(p -> System.out.printf("%d, ", p));
+    }
+}
+---
+import java.util.HashSet;
+import java.util.Set;
+
+public class App {
+    private static int countJewels(String stones, String jewels) {
+        Set<Character> bag = new HashSet<>();
+        for (char c : jewels.toCharArray()) {
+            bag.add(c);
+        }
+
+        int count = 0;
+        for (char c : stones.toCharArray()) {
+            if (bag.contains(c)) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(countJewels("aAAbbbb", "aA"));
+        System.out.println(countJewels("ZZ", "z"));
+    }
+}
+---
+public static boolean inCarpet(long x, long y) {
+    while (x!=0 && y!=0) {
+        if (x % 3 == 1 && y % 3 == 1)
+            return false;
+        x /= 3;
+        y /= 3;
+    }
+    return true;
+}
+
+public static void carpet(final int n) {
+    final double power = Math.pow(3,n);
+    for(long i = 0; i < power; i++) {
+        for(long j = 0; j < power; j++) {
+            System.out.print(inCarpet(i, j) ? "*" : " ");
+        }
+        System.out.println();
+    }
+}
+---
+import java.time.Year;
+
+public class IsLeap {
+
+    public static void main(String[] args) {
+        System.out.println(Year.isLeap(2004));
+    }
+}
+---
+int a = 5;
+double b;
+int c = 5, d = 6, e, f;
+String x = "test";
+String y = x;
+b = 3.14;
+---
+class HundredDoors {
+    public static void main(String[] args) {
+        boolean[] doors = new boolean[101];
+
+        for (int i = 1; i < doors.length; i++) {
+            for (int j = i; j < doors.length; j += i) {
+                doors[j] = !doors[j];
+            }
+        }
+
+        for (int i = 1; i < doors.length; i++) {
+            if (doors[i]) {
+                System.out.printf("Door %d is open.%n", i);
+            }
+        }
+    }
+}
+---
+public class LongestCommonSubstring {
+
+    public static void main(String[] args) {
+        System.out.println(lcs("testing123testing", "thisisatest"));
+        System.out.println(lcs("test", "thisisatest"));
+        System.out.println(lcs("testing", "sting"));
+        System.out.println(lcs("testing", "thisisasting"));
+    }
+
+    static String lcs(String a, String b) {
+        if (a.length() > b.length())
+            return lcs(b, a);
+
+        String res = "";
+        for (int ai = 0; ai < a.length(); ai++) {
+            for (int len = a.length() - ai; len > 0; len--) {
+
+                for (int bi = 0; bi <= b.length() - len; bi++) {
+
+                    if (a.regionMatches(ai, b, bi, len) && len > res.length()) {
+                        res = a.substring(ai, ai + len);
+                    }
+                }
+            }
+        }
+        return res;
+    }
+}
+---
+public class StackTracer {
+    public static void printStackTrace() {
+	StackTraceElement[] elems = Thread.currentThread().getStackTrace();
+
+	System.out.println("Stack trace:");
+	for (int i = elems.length-1, j = 2 ; i >= 3 ; i--, j+=2) {
+	    System.out.printf("%" + j + "s%s.%s%n", "",
+		    elems[i].getClassName(), elems[i].getMethodName());
+	}
+    }
+}
+---
+import java.util.Arrays;
+import java.util.Random;
+
+public class DutchNationalFlag {
+    enum DutchColors {
+        RED, WHITE, BLUE
+    }
+
+    public static void main(String[] args){
+        DutchColors[] balls = new DutchColors[12];
+        DutchColors[] values = DutchColors.values();
+        Random rand = new Random();
+
+        for (int i = 0; i < balls.length; i++)
+            balls[i]=values[rand.nextInt(values.length)];
+        System.out.println("Before: " + Arrays.toString(balls));
+
+        Arrays.sort(balls);
+        System.out.println("After:  " + Arrays.toString(balls));
+
+        boolean sorted = true;
+        for (int i = 1; i < balls.length; i++ ){
+            if (balls[i-1].compareTo(balls[i]) > 0){
+                sorted=false;
+                break;
+            }
+        }
+        System.out.println("Correctly sorted: " + sorted);
+    }
+}
+---
+public class MiddleThreeDigits {
+
+    public static void main(String[] args) {
+        final long[] passing = {123, 12345, 1234567, 987654321, 10001, -10001,
+            -123, -100, 100, -12345, Long.MIN_VALUE, Long.MAX_VALUE};
+
+        final int[] failing = {1, 2, -1, -10, 2002, -2002, 0, Integer.MIN_VALUE,
+            Integer.MAX_VALUE};
+
+        for (long n : passing)
+            System.out.printf("middleThreeDigits(%s): %s\n", n, middleThreeDigits(n));
+
+        for (int n : failing)
+            System.out.printf("middleThreeDigits(%s): %s\n", n, middleThreeDigits(n));
+    }
+
+    public static <T> String middleThreeDigits(T n) {
+        String s = String.valueOf(n);
+        if (s.charAt(0) == '-')
+            s = s.substring(1);
+        int len = s.length();
+        if (len < 3 || len % 2 == 0)
+            return "Need odd and >= 3 digits";
+        int mid = len / 2;
+        return s.substring(mid - 1, mid + 2);
+    }
+}
